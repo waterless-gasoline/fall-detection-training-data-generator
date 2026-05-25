@@ -1,0 +1,29 @@
+# Web framework
+fastapi==0.115.0
+uvicorn==0.30.0
+
+# Database
+sqlalchemy==2.0.35
+
+# Elasticsearch
+elasticsearch==8.15.0
+
+# AI/ML
+openai==1.50.0
+torch==2.5.0
+transformers==4.46.0
+sentence-transformers==3.3.0
+
+# PDF processing
+pdfplumber==0.11.4
+
+# Data
+numpy==1.26.4
+pyyaml==6.0.2
+
+# Testing
+pytest==8.3.3
+requests==2.32.3
+
+# Utilities
+typing-extensions==4.12.2

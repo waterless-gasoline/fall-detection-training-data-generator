@@ -1,0 +1,7 @@
+标注格式说明
+示例文件："D:\IPC\IPC_video_data_annotation\跌倒\0331_Normal_positive_0001\annotation.txt"
+1;4.0-5.25
+
+这里第一行表示第一个跌倒的时间发生在4.0s-5.25s
+倘若有第二行比如：2;1.0-2.0
+就代表第二个跌倒发生在1.0s到2.0s之间

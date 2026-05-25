@@ -1,0 +1,59 @@
+# 视频和图片
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.flv
+*.wmv
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.gif
+
+# 模型权重
+*.pt
+*.pth
+*.onnx
+*.pkl
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+
+# 数据文件
+*.npz
+*.npy
+*.csv
+*.json
+!config.py
+
+# 日志
+logs/*.log
+
+# 临时文件
+*.tmp
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Playwright
+.playwright-mcp/
+
+# 可视化输出
+viz_output/
+
+# IDE
+.idea/
+.vscode/
+
+# 管道输出
+results/
+samples/
+pose_results.npz
+pose_cache/
+*_detection.json
