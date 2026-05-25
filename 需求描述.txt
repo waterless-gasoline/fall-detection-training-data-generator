@@ -37,7 +37,7 @@ D:\IPC\IPC_data_clip_photo\跌倒\2026-03-03_10-18-25的标注数据是存储在
 68–101：accelerations这个也同理是上面0-33每个维度的加速度（对应 34 维的加速度）
 102–135：relative_positions（每个点减去髋中心 hip_center 的相对坐标，34 维）归一化后相减
 136：spine_leg_angle（躯干向量与腿向量夹角）
-137：height_change（这里用的是 positions_Tx26[t][1]归一化后 的差分） nose与前一帧的高度差，有
+137：hip_height_change（这里用的是 positions_Tx26[t][1]归一化后 的差分） nose与前一帧的高度差，有
          做归一化
 138：body_orientation（躯干向量与竖直方向夹角）
 以上每段维度的计算都需要声明相应的计算公式

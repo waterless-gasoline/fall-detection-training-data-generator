@@ -41,7 +41,7 @@
 | 74-83 | bbox面积 | 10帧的bbox宽×高 |
 | 84-117 | relative_positions | 相对髋中心的位置 |
 | 118 | spine_leg_angle | spine=左肩-左髋, leg=左膝-左髋, `np.arctan2` |
-| 119 | height_change | 高度变化 |
+| 119 | hip_height_change | 髋部高度变化 |
 | 120 | body_orientation | 身体朝向，`np.arctan2` |
 
 ## Resume / Reuse Behavior

@@ -22,7 +22,7 @@
 | 74-83 | bbox面积 | 10帧的宽×高 |
 | 84-117 | relative_positions | 相对于髋中心的位置 |
 | 118 | spine_leg_angle | 脊柱-腿部夹角 |
-| 119 | height_change | 高度变化 |
+| 119 | hip_height_change | 髋部高度变化 |
 | 120 | body_orientation | 身体朝向 |
 
 标签：1=FALL（跌倒），0=NOFALL（非跌倒）

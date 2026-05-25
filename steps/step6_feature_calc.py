@@ -125,18 +125,21 @@ class FeatureCalculator:
             angles.append(angle)
         return np.array(angles)
 
-    def compute_height_changes(self, positions_seq: np.ndarray) -> np.ndarray:
+    def compute_hip_height_changes(self, positions_seq: np.ndarray) -> np.ndarray:
         """
-        计算高度变化 - nose点的y坐标差分 (归一化)
+        计算髋部高度变化 - 髋中心的y坐标差分 (归一化)
         positions_seq: (N, 34)
         """
         changes = []
         for i in range(1, len(positions_seq)):
-            # nose是第0个点，y坐标在索引1
-            nose_y_curr = positions_seq[i][1]
-            nose_y_prev = positions_seq[i-1][1]
-            change = nose_y_curr - nose_y_prev
-            changes.append(change)
+            # 髋中心: 左髋(索引22,23) + 右髋(索引24,25) / 2
+            left_hip = positions_seq[i, 22:24]
+            right_hip = positions_seq[i, 24:26]
+            hip_curr = (left_hip + right_hip) / 2
+            left_hip_prev = positions_seq[i-1, 22:24]
+            right_hip_prev = positions_seq[i-1, 24:26]
+            hip_prev = (left_hip_prev + right_hip_prev) / 2
+            changes.append(hip_curr[1] - hip_prev[1])
         return np.array(changes)
 
     def compute_body_orientations(self, positions_seq: np.ndarray) -> np.ndarray:
@@ -204,8 +207,8 @@ class FeatureCalculator:
         # 计算spine_leg_angles (N,)
         spine_leg_angles = self.compute_spine_leg_angles(positions_seq)
 
-        # 计算height_changes (N-1,)
-        height_changes = self.compute_height_changes(positions_seq)
+        # 计算hip_height_changes (N-1,)
+        hip_height_changes = self.compute_hip_height_changes(positions_seq)
 
         # 计算body_orientations (N,)
         body_orientations = self.compute_body_orientations(positions_seq)
@@ -257,7 +260,7 @@ class FeatureCalculator:
         features.append(spine_leg_angles[-1] if len(spine_leg_angles) > 0 else 0)
 
         # 137: height_change (最后一帧)
-        features.append(height_changes[-1] if len(height_changes) > 0 else 0)
+        features.append(hip_height_changes[-1] if len(hip_height_changes) > 0 else 0)
 
         # 138: body_orientation (最后一帧)
         features.append(body_orientations[-1] if len(body_orientations) > 0 else 0)
@@ -307,8 +310,8 @@ class FeatureCalculator:
         # 计算spine_leg_angles (N,)
         spine_leg_angles = self.compute_spine_leg_angles(positions_seq)
 
-        # 计算height_changes (N-1,)
-        height_changes = self.compute_height_changes(positions_seq)
+        # 计算hip_height_changes (N-1,)
+        hip_height_changes = self.compute_hip_height_changes(positions_seq)
 
         # 计算body_orientations (N,)
         body_orientations = self.compute_body_orientations(positions_seq)
@@ -424,9 +427,9 @@ class FeatureCalculator:
         calculation_steps.append(f"  Spine-Leg Angle: angle_between(spine_vector, leg_vector) = {sla:.6f} rad")
 
         # 137: height_change
-        hc = height_changes[-1] if len(height_changes) > 0 else 0
-        dim_details.append(f"feat_137: height_change = nose_y[-1] - nose_y[-2] = {hc:.6f}")
-        calculation_steps.append(f"  Height Change: nose_y[last] - nose_y[prev] = {hc:.6f}")
+        hc = hip_height_changes[-1] if len(hip_height_changes) > 0 else 0
+        dim_details.append(f"feat_137: hip_height_change = hip_y[-1] - hip_y[-2] = {hc:.6f}")
+        calculation_steps.append(f"  Hip Height Change: hip_y[last] - hip_y[prev] = {hc:.6f}")
 
         # 138: body_orientation
         bo = body_orientations[-1] if len(body_orientations) > 0 else 0
@@ -446,7 +449,7 @@ class FeatureCalculator:
             features.extend([0] * 34)
         features.extend(relative_positions_seq[-1].tolist())
         features.append(spine_leg_angles[-1] if len(spine_leg_angles) > 0 else 0)
-        features.append(height_changes[-1] if len(height_changes) > 0 else 0)
+        features.append(hip_height_changes[-1] if len(hip_height_changes) > 0 else 0)
         features.append(body_orientations[-1] if len(body_orientations) > 0 else 0)
         features.append(label)
 

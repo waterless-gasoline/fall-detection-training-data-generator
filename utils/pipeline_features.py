@@ -111,12 +111,16 @@ def compute_features_for_sample(sample_detections: list, sample_timestamps: list
 
     spine_leg_angles = [compute_spine_leg_angle(p) for p in positions_seq]
 
-    height_changes = []
+    hip_height_changes = []
     for i in range(1, len(positions_seq)):
-        nose_y_curr = positions_seq[i][1]
-        nose_y_prev = positions_seq[i-1][1]
-        height_changes.append(nose_y_curr - nose_y_prev)
-    height_changes = np.array(height_changes)
+        left_hip = positions_seq[i, 22:24]
+        right_hip = positions_seq[i, 24:26]
+        hip_curr = (left_hip + right_hip) / 2
+        left_hip_prev = positions_seq[i-1, 22:24]
+        right_hip_prev = positions_seq[i-1, 24:26]
+        hip_prev = (left_hip_prev + right_hip_prev) / 2
+        hip_height_changes.append(hip_curr[1] - hip_prev[1])
+    hip_height_changes = np.array(hip_height_changes)
 
     body_orientations = [compute_body_orientation(p) for p in positions_seq]
 
@@ -148,7 +152,7 @@ def compute_features_for_sample(sample_detections: list, sample_timestamps: list
         features.extend([0] * 34)
     features.extend(rel_positions_seq[-1].tolist())
     features.append(spine_leg_angles[-1])
-    features.append(height_changes[-1] if len(height_changes) > 0 else 0)
+    features.append(hip_height_changes[-1] if len(hip_height_changes) > 0 else 0)
     features.append(body_orientations[-1])
     features.append(label)
 
@@ -203,8 +207,11 @@ def compute_sample_features_for_npz(sample_detections: list, sample_timestamps: 
         bbox_areas.append(area)
 
     spine_leg_angles = np.array([compute_spine_leg_angle(p) for p in positions_seq])
-    height_changes = np.array([(positions_norm[i][1] - positions_norm[i-1][1])
-                               for i in range(1, len(positions_norm))])
+    hip_height_changes = np.array([
+        ((positions_seq[i, 22:24] + positions_seq[i, 24:26]) / 2)[1] -
+        ((positions_seq[i-1, 22:24] + positions_seq[i-1, 24:26]) / 2)[1]
+        for i in range(1, len(positions_seq))
+    ])
     body_orientations = np.array([compute_body_orientation(p) for p in positions_seq])
 
     sample_features = []
@@ -230,7 +237,7 @@ def compute_sample_features_for_npz(sample_detections: list, sample_timestamps: 
         features.append(spine_leg_angles[frame_idx])
 
         if frame_idx > 0:
-            features.append(height_changes[frame_idx - 1])
+            features.append(hip_height_changes[frame_idx - 1])
         else:
             features.append(0)
 
@@ -355,8 +362,11 @@ def compute_sample_debug_details(sample_detections: list, sample_timestamps: lis
     rel_positions_seq = np.array(rel_positions)
 
     spine_leg_angles = [compute_spine_leg_angle(p) for p in positions_seq]
-    height_changes = np.array([(positions_norm[i][1] - positions_norm[i-1][1])
-                               for i in range(1, len(positions_norm))])
+    hip_height_changes = np.array([
+        ((positions_seq[i, 22:24] + positions_seq[i, 24:26]) / 2)[1] -
+        ((positions_seq[i-1, 22:24] + positions_seq[i-1, 24:26]) / 2)[1]
+        for i in range(1, len(positions_seq))
+    ])
     body_orientations = [compute_body_orientation(p) for p in positions_seq]
 
     bbox_widths = []
@@ -469,7 +479,7 @@ def compute_sample_debug_details(sample_detections: list, sample_timestamps: lis
 
     lines.append("")
     lines.append("-" * 60)
-    lines.append("特征119 (height_change 外接矩形归一化): 所有11帧")
+    lines.append("特征119 (hip_height_change 外接矩形归一化): 所有11帧")
     lines.append("-" * 60)
     lines.append("  坐标类型: 高度差值 (y方向)")
     lines.append("  归一化方式: (y差值) / bbox_h")
@@ -477,7 +487,7 @@ def compute_sample_debug_details(sample_detections: list, sample_timestamps: lis
         if frame_idx == 1:
             lines.append(f"  feat_119: frame_{frame_idx} = 0 (无前一帧)")
         else:
-            h_change = height_changes[frame_idx-1] if frame_idx-1 < len(height_changes) else 0
+            h_change = hip_height_changes[frame_idx-1] if frame_idx-1 < len(hip_height_changes) else 0
             lines.append(f"  feat_119: frame_{frame_idx} = ({positions_norm[frame_idx][1]:.4f} - {positions_norm[frame_idx-1][1]:.4f}) = {h_change:.6f}")
 
     lines.append("")

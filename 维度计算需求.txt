@@ -13,7 +13,7 @@
                    spine_vector = 左肩 - 左髋 （从髋部指向肩部的向量，代表躯干方向）
                    leg_vector = 左膝 - 左髋 （从髋部指向膝部的向量，代表大腿方向）
                    spine_leg_angle = arccos( dot(spine, leg) / (|spine| × |leg|) )
-137        ：height_change， nose与前一帧的高度差，用归一化后的值计算，容许负值，这里也是一样使用相对于外接矩形的坐标，然后归一化也是基于外接矩形归一化
+137        ：hip_height_change， nose与前一帧的高度差，用归一化后的值计算，容许负值，这里也是一样使用相对于外接矩形的坐标，然后归一化也是基于外接矩形归一化
 138        ：body_orientation（躯干向量与竖直方向夹角），弧度
                   spine_vector = 左肩 - 左髋
                   vertical = [0, 1] （图像坐标系：y 轴向下）

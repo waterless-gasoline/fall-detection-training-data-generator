@@ -15,7 +15,7 @@
 - 74-83: bbox面积（宽×高）
 - 84-117: 相对位置 (relative_positions)
 - 118: 脊柱-腿部角度 (spine_leg_angle)
-- 119: 高度变化 (height_change)
+- 119: 高度变化 (hip_height_change)
 - 120: 身体朝向 (body_orientation)
 
 **输出格式**：NPZ格式，`X.shape=(N, 10, 121)`, `y.shape=(N,)`，标签 `1=FALL`, `0=NOFALL`
